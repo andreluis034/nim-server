@@ -7,7 +7,7 @@ var usernames = {
  * @param {String} password 
  */
 function user(nick, password){
-    this.nick = username
+    this.nick = nick
     this.password = password
     this.victories = 0
 }

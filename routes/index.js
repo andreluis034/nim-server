@@ -5,6 +5,8 @@ const register = require('./register')
 
 var routes = {}
 
+
+
 function Route() {
     this.path = arguments[0]
     this.callbacks = []
@@ -24,7 +26,8 @@ function addRoute(method, route){
     routes[method][route.path] = route
 }
 
-addRoute('POST', new Route('/register', middleware.parseJSON, register))
+addRoute('POST', new Route('/register', middleware.parseJSON, 
+    middleware.hasUser, middleware.validateUser, register.final))
 
 /**
  * Handles the incoming request
@@ -32,6 +35,10 @@ addRoute('POST', new Route('/register', middleware.parseJSON, register))
  * @param {ServerResponse} response 
  */
 module.exports = function(request, response){
+    response.setHeader("Content-Type", "application/json")
+    response.setHeader("Access-Control-Allow-Origin", "*");
+    response.setHeader("Cache-Control", "no-cache");
+
     request.url = URL.parse(request.url)
     if(routes[request.method] === undefined) {
         response.end(JSON.stringify({error: `unknown ${request.method} request`}))
@@ -44,7 +51,6 @@ module.exports = function(request, response){
     }
     var callbacks = path.callbacks.slice()
     function next() {
-        console.log('hi')
         callback = callbacks.pop();
         callback(request, response, next)
     }
