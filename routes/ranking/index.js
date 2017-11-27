@@ -7,7 +7,7 @@ module.exports = {
             res.end(JSON.stringify({error: "Undefined size"}))
             return
         }
-        var number = req.body.size * 1
+        var number = +req.body.size 
         if(Number.isNaN(number) || !Number.isInteger(number)) {
             res.writeHead(400)
             res.end(JSON.stringify({error: "Invalid size"}))

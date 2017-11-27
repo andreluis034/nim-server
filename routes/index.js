@@ -3,6 +3,7 @@ const URL = require('url')
 const middleware = require('./middleware')
 const register = require('./register')
 const ranking = require('./ranking')
+const join = require('./join')
 
 var routes = {}
 
@@ -31,6 +32,9 @@ addRoute('POST', new Route('/register', middleware.parseJSON,
     middleware.hasUser, middleware.validateUser, register.final))
 addRoute('POST', new Route('/ranking', middleware.parseJSON, 
     ranking.hasValidInfo, ranking.final))
+addRoute('POST', new Route('/join', middleware.parseJSON, 
+    middleware.hasUser, middleware.validateUser, join.hasValidInfo, 
+    join.getGame, join.final))
 
 /**
  * Handles the incoming request
