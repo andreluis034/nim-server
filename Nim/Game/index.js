@@ -80,6 +80,14 @@ game.prototype.switchTurn = function() {
         this.currentTurn = this.players[0]
 }
 
+game.prototype.finalState = function() {
+    for(var i = 0; i < this.rack.length; ++i){
+        if(this.rack[i] !== 0)
+            return false
+    }
+    return true
+}
+
 module.exports = {
     /**
      * @param {Number} size
