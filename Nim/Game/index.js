@@ -65,8 +65,21 @@ game.prototype.bindClient = function(nick, sseclient){
         }
 }
 
-game.prototype.start = function() {
+/**
+ * 
+ * @param {String} msg 
+ */
+game.prototype.broadcast = function(msg) {
+    for(var i = 0; i < this.players.length; ++i) {
+        this.players[i].SSEClient.send(msg)
+    }
+}
 
+game.prototype.start = function() {
+    this.broadcast(JSON.stringify({
+        turn: this.currentTurn.user.nick,
+        rack: this.rack
+    }))
 }
 
 /**
@@ -86,12 +99,25 @@ game.prototype.validPlay = function(play) {
     return true
 }
 
+/**
+ * 
+ * @param {*} play 
+ */
 game.prototype.makePlay = function(play) {
     this.rack[play.stack] -= play.pieces
     this.switchTurn()
+    this.broadcast(JSON.stringify({
+        turn: this.currentTurn.user.nick,
+        rack: this.rack,
+        stack: play.stack,
+        pieces: play.pieces
+    }))
     //TODO send data
 }
 
+/**
+ * Changes the turn to the next player
+ */
 game.prototype.switchTurn = function() {
     if(this.currentTurn === this.players[0])
         this.currentTurn = this.players[1]
@@ -99,6 +125,10 @@ game.prototype.switchTurn = function() {
         this.currentTurn = this.players[0]
 }
 
+ /**
+  * returns true if the game is in its final state
+  * @returns {Boolean}
+  */
 game.prototype.finalState = function() {
     for(var i = 0; i < this.rack.length; ++i){
         if(this.rack[i] !== 0)

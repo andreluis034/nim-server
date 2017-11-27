@@ -5,7 +5,7 @@ function SSEClient(req, res) {
     this.res = res;
     this.req.socket.setNoDelay(true);
     this.res.writeHead(200, {
-      'Content-Type': 'application/json',
+      'Content-Type': 'application/json', //TODO this might be wrong
       'Cache-Control': 'no-cache',
       'Connection': 'keep-alive'
   });

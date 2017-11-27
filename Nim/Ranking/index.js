@@ -1,9 +1,4 @@
 var ranking = {
-    20: [{
-        nick: "null",
-        victories: 20,
-        games: 4
-    }]
 }
 
 /**
