@@ -10,6 +10,7 @@ function user(nick, password){
     this.nick = nick
     this.password = password
     this.victories = 0
+    this.games = 0
 }
 
 /**
@@ -26,7 +27,7 @@ module.exports = {
      * @param {String} nick 
      * @returns {user}
      */
-    getUser(nick) {
+    getUser: function(nick) {
         return usernames[nick]
     },
     /**
@@ -35,7 +36,7 @@ module.exports = {
      * @param {String} pass 
      * @returns {user}
      */
-    createUser(nick, pass) {
+    createUser: function(nick, pass) {
         var s  =  new user(nick, pass)
         usernames[nick] = s
         return s

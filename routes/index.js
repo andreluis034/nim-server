@@ -2,6 +2,7 @@ const http = require('http')
 const URL = require('url')
 const middleware = require('./middleware')
 const register = require('./register')
+const ranking = require('./ranking')
 
 var routes = {}
 
@@ -28,6 +29,8 @@ function addRoute(method, route){
 
 addRoute('POST', new Route('/register', middleware.parseJSON, 
     middleware.hasUser, middleware.validateUser, register.final))
+addRoute('POST', new Route('/ranking', middleware.parseJSON, 
+    ranking.hasValidInfo, ranking.final))
 
 /**
  * Handles the incoming request
