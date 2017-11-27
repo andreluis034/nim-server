@@ -23,7 +23,7 @@ function game(size, groupID) {
 }
 
 game.prototype.addPlayer = function(user) {
-    if(this.hasUser(user))
+    if(this.hasUser(user.nick))
         return;
     if(this.players.length === 2)
         throw new Error(`${this.gameID} already contains 2 players, tried to add ${JSON.stringify(user)}`)
@@ -35,9 +35,14 @@ game.prototype.addPlayer = function(user) {
         this.ready()
 }
 
-game.prototype.hasUser = function(user) {
+/**
+ * 
+ * @param {String} nick 
+ * @returns {Boolean}
+ */
+game.prototype.hasUser = function(nick) {
     for(var i = 0; i < this.players.length; ++i) 
-        if(user === this.players[i].user)
+        if(nick === this.players[i].user.nick)
             return true
     return false
 }
@@ -45,6 +50,19 @@ game.prototype.hasUser = function(user) {
 game.prototype.ready = function() {
     delete waitingLobby[this.groupID]
     activeGames[this.gameID] = this
+}
+
+/**
+ * 
+ * @param {String} nick 
+ * @param {SSEClient} sseclient 
+ */
+game.prototype.bindClient = function(nick, sseclient){
+    for(var i = 0; i < this.players.length; ++i) 
+        if(nick === this.players[i].user.nick){
+            this.players[i].SSEClient = sseclient
+            break;            
+        }
 }
 
 game.prototype.start = function() {
