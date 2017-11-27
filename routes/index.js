@@ -37,7 +37,7 @@ addRoute('POST', new Route('/join', middleware.parseJSON,
     join.getGameLobby, join.final))
 addRoute('POST', new Route('/notify', middleware.parseJSON, 
     middleware.hasUser, middleware.validateUser, notify.hasValidInfo, 
-    notify.hasValidInfo, notify.getGame, notify.final))
+    notify.getGame, notify.isValidPlay, notify.final))
 addRoute('GET', new Route('/update', update.hasValidInfo, update.final))
 
 /**

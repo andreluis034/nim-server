@@ -1,4 +1,4 @@
-const game = require('../../Nim/Game')
+const GAME = require('../../Nim/Game')
 
 module.exports = {
     hasValidInfo: (req, res, next) => {
@@ -24,7 +24,7 @@ module.exports = {
         next()
     },
     getGame: (req, res, next) => {
-        req.game = game.getActiveGame(req.body.game)
+        req.game = GAME.getActiveGame(req.body.game)
         if(req.game === undefined) {
             res.writeHead(400)
             res.end(JSON.stringify({error: `The game ${req.game} doesn't exist`}))
@@ -33,7 +33,7 @@ module.exports = {
         next()
     },
     isValidPlay: (req, res, next) => {
-        var result = req.game.isValidPlay(req.body)
+        var result = req.game.validPlay(req.body)
         if(result !== true) {
             res.writeHead(400)
             res.end(JSON.stringify({error: result}))
