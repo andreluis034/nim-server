@@ -1,4 +1,5 @@
 const user = require('../../Nim/User')
+const ranking = require('../../Nim/Game')
 
 
 module.exports = {
@@ -36,5 +37,7 @@ module.exports = {
         }
         req.user = us
         next()
-    }
+    },
+
+
 }

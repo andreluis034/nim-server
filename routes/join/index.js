@@ -7,7 +7,7 @@ module.exports = {
             res.end(JSON.stringify({error: "missing arguments"}))
             return
         }
-        var number = req.body.size * 1
+        var number = +req.body.size
         if(Number.isNaN(number) || !Number.isInteger(number)) {
             res.writeHead(400)
             res.end(JSON.stringify({error: "Invalid size"}))
@@ -16,7 +16,7 @@ module.exports = {
         req.body.size = number
         next()
     },
-    getGame: (req, res, next) => {
+    getGameLobby: (req, res, next) => {
         req.game = ranking.getGameLobby(req.body.size, req.body.group)
         next()
     },

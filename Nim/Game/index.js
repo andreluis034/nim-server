@@ -16,6 +16,10 @@ function game(size, groupID) {
     this.gameID = (gameId++).toString(16)
     this.players = []
     this.currentTurn = null
+    this.rack = []
+    for(var i = 0; i < size; ++i) {
+        this.rack.push(i + 1)
+    }
 }
 
 game.prototype.addPlayer = function(user) {
@@ -27,7 +31,7 @@ game.prototype.addPlayer = function(user) {
         this.currentTurn = user
     this.players.push(user)
     if(this.players.length === 2)
-        this.start()
+        this.ready()
 }
 
 game.prototype.hasUser = function(user) {
@@ -36,9 +40,44 @@ game.prototype.hasUser = function(user) {
             return true
     return false
 }
-game.prototype.start = function() {
+
+game.prototype.ready = function() {
     delete waitingLobby[this.groupID]
     activeGames[this.gameID] = this
+}
+
+game.prototype.start = function() {
+
+}
+
+/**
+ * 
+ * @param {*} play
+ * @returns {String|Number} 
+ */
+game.prototype.validPlay = function(play) {
+    if(play.nick !== this.currentTurn.nick)
+        return "Not your turn to play"
+    if(play.stack >= this.rack.length || play.stack < 0)
+        return "Invalid stack " + play.stack
+    if(play.pieces < 1)
+        return "you must remove at least one piece"
+    if(this.rack[play.stack] < play.pieces)
+        return "Stack cannot have a negative numver of pieces"
+    return true
+}
+
+game.prototype.makePlay = function(play) {
+    this.rack[play.stack] -= play.pieces
+    this.switchTurn()
+    //TODO send data
+}
+
+game.prototype.switchTurn = function() {
+    if(this.currentTurn === this.players[0])
+        this.currentTurn = this.players[1]
+    else
+        this.currentTurn = this.players[0]
 }
 
 module.exports = {
