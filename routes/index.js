@@ -5,6 +5,7 @@ const register = require('./register')
 const ranking = require('./ranking')
 const join = require('./join')
 const notify = require('./notify')
+const update = require('./update')
 
 var routes = {}
 
@@ -33,10 +34,11 @@ addRoute('POST', new Route('/ranking', middleware.parseJSON,
     ranking.hasValidInfo, ranking.final))
 addRoute('POST', new Route('/join', middleware.parseJSON, 
     middleware.hasUser, middleware.validateUser, join.hasValidInfo, 
-    join.getGame, join.final))
+    join.getGameLobby, join.final))
 addRoute('POST', new Route('/notify', middleware.parseJSON, 
     middleware.hasUser, middleware.validateUser, notify.hasValidInfo, 
     notify.hasValidInfo, notify.getGame, notify.final))
+addRoute('GET', new Route('/update', update.hasValidInfo, update.final))
 
 /**
  * Handles the incoming request
@@ -48,7 +50,7 @@ module.exports = function(request, response){
     response.setHeader("Access-Control-Allow-Origin", "*");
     response.setHeader("Cache-Control", "no-cache");
 
-    request.url = URL.parse(request.url)
+    request.url = URL.parse(request.url, true)
     if(routes[request.method] === undefined) {
         response.end(JSON.stringify({error: `unknown ${request.method} request`}))
         return

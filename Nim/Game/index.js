@@ -20,6 +20,7 @@ function game(size, groupID) {
     for(var i = 0; i < size; ++i) {
         this.rack.push(i + 1)
     }
+    activeGames[this.gameID] = this
 }
 
 game.prototype.addPlayer = function(user) {
@@ -49,7 +50,6 @@ game.prototype.hasUser = function(nick) {
 
 game.prototype.ready = function() {
     delete waitingLobby[this.groupID]
-    activeGames[this.gameID] = this
 }
 
 /**

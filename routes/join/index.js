@@ -1,4 +1,4 @@
-const ranking = require('../../Nim/Game')
+const game = require('../../Nim/Game')
 
 module.exports = {
     hasValidInfo: (req, res, next) => {
@@ -17,7 +17,7 @@ module.exports = {
         next()
     },
     getGameLobby: (req, res, next) => {
-        req.game = ranking.getGameLobby(req.body.size, req.body.group)
+        req.game = game.getGameLobby(req.body.size, req.body.group)
         next()
     },
     final: (req, res) => {

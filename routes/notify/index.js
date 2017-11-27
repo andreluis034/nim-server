@@ -1,3 +1,5 @@
+const game = require('../../Nim/Game')
+
 module.exports = {
     hasValidInfo: (req, res, next) => {
         if(req.body.game === undefined || req.body.stack === undefined || req.body.pieces === undefined) {
@@ -22,7 +24,7 @@ module.exports = {
         next()
     },
     getGame: (req, res, next) => {
-        req.game = ranking.getActiveGame(req.body.game)
+        req.game = game.getActiveGame(req.body.game)
         if(req.game === undefined) {
             res.writeHead(400)
             res.end(JSON.stringify({error: `The game ${req.game} doesn't exist`}))

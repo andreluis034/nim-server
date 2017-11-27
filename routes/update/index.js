@@ -5,14 +5,23 @@ function SSEClient(req, res) {
     this.res = res;
     this.req.socket.setNoDelay(true);
     this.res.writeHead(200, {
-      'Content-Type': 'application/json', //TODO this might be wrong
+      'Content-Type': 'text/event-stream', //TODO this might be wrong
       'Cache-Control': 'no-cache',
       'Connection': 'keep-alive'
   });
+  this.res.write(':ok\n\n')
+  this.id = 0
+  this.send("{}")
 }
 
+/**
+ * 
+ * @param {String} data 
+ */
 SSEClient.prototype.send = function(data) {
-    this.res.write(JSON.stringify(data))
+    var toSend = `id: ${this.id++}\n\n`
+    toSend += "data: " + data + "\n\n"
+    this.res.write(toSend)
 }
 
 SSEClient.prototype.close = function() {
@@ -21,21 +30,18 @@ SSEClient.prototype.close = function() {
 
 module.exports = {
     hasValidInfo: function(req, res, next) {
-        console.log(req.query)
-        console.log(req.query.nick)
-        console.log(req.query.game)
-        if(req.query === undefined || req.query.nick === undefined || req.query.game === undefined) {
+        if(req.url.query === undefined || req.url.query.nick === undefined || req.url.query.game === undefined) {
             res.writeHead(400)
             res.end(JSON.stringify({error: "Missing arguments"}))
             return
         }
-        req.game = ranking.getActiveGame(req.query.game)
+        req.game = ranking.getActiveGame(req.url.query.game)
         if(req.game === undefined) {
             res.writeHead(400)
-            res.end(JSON.stringify({error: `No active game with id ${req.query.game}`}))
+            res.end(JSON.stringify({error: `No active game with id ${req.url.query.game}`}))
             return
         }
-        if(!req.game.hasUser(req.query.nick)) {
+        if(!req.game.hasUser(req.url.query.nick)) {
             res.writeHead(400)
             res.end(JSON.stringify({error: `You don't belong in this game go away`}))
             return
@@ -43,6 +49,6 @@ module.exports = {
         next()
     },
     final: function(req, res) {
-        req.game.bindClient(req.query.nick, new SSEClient(req, res))
+        req.game.bindClient(req.url.query.nick, new SSEClient(req, res))
     }
 }
