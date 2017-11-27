@@ -95,7 +95,6 @@ game.prototype.start = function() {
 * @returns {String|Number} 
 */
 game.prototype.validPlay = function(play) {
-    console.log(play)
     if(play.nick !== this.currentTurn.user.nick)
         return "Not your turn to play"
     if(play.stack >= this.rack.length || play.stack < 0)
@@ -130,7 +129,6 @@ game.prototype.makePlay = function(play) {
         stack: play.stack,
         pieces: play.pieces
     }))
-    //TODO end game
 }
 
 /**
