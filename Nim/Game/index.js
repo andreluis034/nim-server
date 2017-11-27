@@ -95,7 +95,7 @@ game.prototype.validPlay = function(play) {
     if(play.pieces < 1)
         return "you must remove at least one piece"
     if(this.rack[play.stack] < play.pieces)
-        return "Stack cannot have a negative numver of pieces"
+        return "Stack cannot have a negative number of pieces"
     return true
 }
 
