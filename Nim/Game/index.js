@@ -113,7 +113,16 @@ game.prototype.validPlay = function(play) {
 */
 game.prototype.makePlay = function(play) {
     this.rack[play.stack] = play.pieces
-
+    if(this.finalState()){
+        this.broadcast(JSON.stringify({
+            winner: this.currentTurn.user.nick,
+            rack: this.rack,
+            stack: play.stack,
+            pieces: play.pieces
+        }))
+        //TODO save victories
+        return;
+    }
     this.switchTurn()
     this.broadcast(JSON.stringify({
         turn: this.currentTurn.user.nick,
