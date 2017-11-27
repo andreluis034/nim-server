@@ -11,6 +11,7 @@ function user(nick, password){
     this.password = password
     this.victories = 0
     this.games = 0
+    this.activeGame = null
 }
 
 /**
@@ -19,6 +20,21 @@ function user(nick, password){
  */
 user.prototype.passwordMatches = function(password) {
     return this.password === password
+}
+
+/**
+ * 
+ * @param {Game} game 
+ */
+user.prototype.setActiveGame = function(game) {
+    this.activeGame = game
+}
+
+/**
+ * Gives up the current activeGame
+ */
+user.prototype.giveUp = function() {
+    this.activeGame.giveUp(this)
 }
 
 module.exports = {

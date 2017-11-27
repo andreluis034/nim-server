@@ -19,6 +19,7 @@ function game(size, groupID) {
     this.rack = []
     this.clientsConnected = 0
     this.size = size
+    this.playing = false
     for(var i = 0; i < size; ++i) {
         this.rack.push(i + 1)
     }
@@ -31,6 +32,7 @@ game.prototype.addPlayer = function(user) {
     if(this.players.length === 2)
         throw new Error(`${this.gameID} already contains 2 players, tried to add ${JSON.stringify(user)}`)
     var player = {user: user, SSEClient: undefined}
+    user.setActiveGame(this)
     if(this.currentTurn === null) 
         this.currentTurn = player
     this.players.push(player)
@@ -84,6 +86,7 @@ game.prototype.broadcast = function(msg) {
 }
 
 game.prototype.start = function() {
+    this.playing = true
     this.broadcast(JSON.stringify({
         turn: this.currentTurn.user.nick,
         rack: this.rack
@@ -142,6 +145,7 @@ game.prototype.gameFinished = function(){
         } else {
             ranking.addGame(this.players[i].user.nick, this.size)
         }
+        this.players[i].user.setActiveGame(null)
         this.players[i].SSEClient.close()
     }
     delete activeGames[this.gameID]
@@ -152,9 +156,9 @@ game.prototype.gameFinished = function(){
 */
 game.prototype.switchTurn = function() {
     if(this.currentTurn === this.players[0])
-    this.currentTurn = this.players[1]
+        this.currentTurn = this.players[1]
     else
-    this.currentTurn = this.players[0]
+        this.currentTurn = this.players[0]
 }
 
 /**
@@ -167,6 +171,32 @@ game.prototype.finalState = function() {
         return false
     }
     return true
+}
+
+/**
+ * 
+ * @param {user} user 
+ */
+game.prototype.giveUp = function(user) {
+    if(!this.playing) {
+        this.broadcast(JSON.stringify({
+            winner: undefined
+        }))
+        delete activeGames[this.gameID]
+        return;
+    }
+
+    var winner = null
+    for(var i = 0; i < this.players.length; ++i) {
+        if(this.players[i].user !== user) {
+            winner = this.players[i].user.nick
+            break;
+        }
+    }
+    this.broadcast(JSON.stringify({
+        winner: winner
+    }))
+    this.gameFinished()
 }
 
 module.exports = {
