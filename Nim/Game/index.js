@@ -1,4 +1,4 @@
-
+const ranking = require('../Ranking')
 var gameId = 0;
 var waitingLobby = {
     
@@ -18,6 +18,7 @@ function game(size, groupID) {
     this.currentTurn = null
     this.rack = []
     this.clientsConnected = 0
+    this.size = size
     for(var i = 0; i < size; ++i) {
         this.rack.push(i + 1)
     }
@@ -26,15 +27,15 @@ function game(size, groupID) {
 
 game.prototype.addPlayer = function(user) {
     if(this.hasUser(user.nick))
-    return;
+        return;
     if(this.players.length === 2)
-    throw new Error(`${this.gameID} already contains 2 players, tried to add ${JSON.stringify(user)}`)
+        throw new Error(`${this.gameID} already contains 2 players, tried to add ${JSON.stringify(user)}`)
     var player = {user: user, SSEClient: undefined}
     if(this.currentTurn === null) 
-    this.currentTurn = player
+        this.currentTurn = player
     this.players.push(player)
     if(this.players.length === 2)
-    this.ready()
+        this.ready()
 }
 
 /**
@@ -101,6 +102,8 @@ game.prototype.validPlay = function(play) {
         return "Invalid stack " + play.stack
     if(play.pieces < 0)
         return "Stack cannot have a negative number of pieces"
+    if(play.pieces > this.rack[play.stack]) 
+        return "You cannot add pieces to the stack"
     if(this.rack[play.stack] == 0)
         return "You cannot make a play on an empty stack"
     return true
@@ -119,7 +122,7 @@ game.prototype.makePlay = function(play) {
             stack: play.stack,
             pieces: play.pieces
         }))
-        //TODO save victories
+        this.gameFinished()
         return;
     }
     this.switchTurn()
@@ -129,6 +132,20 @@ game.prototype.makePlay = function(play) {
         stack: play.stack,
         pieces: play.pieces
     }))
+}
+
+
+game.prototype.gameFinished = function(){
+    for(var i = 0; i < this.players.length; ++i) {
+        if(this.currentTurn == this.players[i]) {
+            ranking.addWin(this.players[i].user.nick, this.size)
+        } else {
+            ranking.addGame(this.players[i].user.nick, this.size)
+        }
+        this.players[i].SSEClient.close()
+        
+    }
+    //TODO save victories
 }
 
 /**
