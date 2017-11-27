@@ -27,16 +27,17 @@ game.prototype.addPlayer = function(user) {
         return;
     if(this.players.length === 2)
         throw new Error(`${this.gameID} already contains 2 players, tried to add ${JSON.stringify(user)}`)
+    var player = {user: user, SSEClient: undefined}
     if(this.currentTurn === null) 
-        this.currentTurn = user
-    this.players.push(user)
+        this.currentTurn = player
+    this.players.push(player)
     if(this.players.length === 2)
         this.ready()
 }
 
 game.prototype.hasUser = function(user) {
     for(var i = 0; i < this.players.length; ++i) 
-        if(user === this.players[i])
+        if(user === this.players[i].user)
             return true
     return false
 }
@@ -56,7 +57,7 @@ game.prototype.start = function() {
  * @returns {String|Number} 
  */
 game.prototype.validPlay = function(play) {
-    if(play.nick !== this.currentTurn.nick)
+    if(play.nick !== this.currentTurn.user.nick)
         return "Not your turn to play"
     if(play.stack >= this.rack.length || play.stack < 0)
         return "Invalid stack " + play.stack
