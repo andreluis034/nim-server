@@ -143,9 +143,8 @@ game.prototype.gameFinished = function(){
             ranking.addGame(this.players[i].user.nick, this.size)
         }
         this.players[i].SSEClient.close()
-        
     }
-    //TODO save victories
+    delete activeGames[this.gameID]
 }
 
 /**
