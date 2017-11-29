@@ -38,7 +38,7 @@ module.exports = {
         req.game = ranking.getActiveGame(req.url.query.game)
         if(req.game === undefined) {
             res.writeHead(400)
-            res.end(JSON.stringify({error: `No active game with id ${req.url.query.game}`}))
+            res.end(JSON.stringify({error: `Invalid game reference`}))
             return
         }
         if(!req.game.hasUser(req.url.query.nick)) {

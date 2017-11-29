@@ -180,7 +180,7 @@ game.prototype.finalState = function() {
 game.prototype.giveUp = function(user) {
     if(!this.playing) {
         this.broadcast(JSON.stringify({
-            winner: undefined
+            winner: null
         }))
         delete activeGames[this.gameID]
         return;

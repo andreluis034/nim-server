@@ -33,8 +33,8 @@ addRoute('POST', new Route('/register', middleware.parseJSON,
 addRoute('POST', new Route('/ranking', middleware.parseJSON, 
     ranking.hasValidInfo, ranking.final))
 addRoute('POST', new Route('/join', middleware.parseJSON, 
-    middleware.hasUser, middleware.validateUser, join.hasValidInfo, 
-    join.getGameLobby, join.final))
+    middleware.hasUser, middleware.validateUser, middleware.checkIfActiveGame,
+    join.hasValidInfo, join.getGameLobby, join.final))
 addRoute('POST', new Route('/notify', middleware.parseJSON, 
     middleware.hasUser, middleware.validateUser, notify.hasValidInfo, 
     notify.getGame, notify.isValidPlay, notify.final))

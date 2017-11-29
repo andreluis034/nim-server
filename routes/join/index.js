@@ -16,6 +16,7 @@ module.exports = {
         req.body.size = number
         next()
     },
+
     getGameLobby: (req, res, next) => {
         req.game = game.getGameLobby(req.body.size, req.body.group)
         next()

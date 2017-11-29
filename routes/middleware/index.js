@@ -38,6 +38,13 @@ module.exports = {
         req.user = us
         next()
     },
-
+    checkIfActiveGame: (req, res, next) => {
+        if(req.user.getActiveGame() !== null) {
+            res.writeHead(400)
+            res.end(JSON.stringify({error: "You're already in a game"}))  
+            return
+        }
+        next()
+    },
 
 }

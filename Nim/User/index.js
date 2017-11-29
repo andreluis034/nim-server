@@ -31,6 +31,12 @@ user.prototype.setActiveGame = function(game) {
 }
 
 /**
+ * @param {Game} returns the active game
+ */
+user.prototype.getActiveGame = function() {
+    return this.activeGame
+}
+/**
  * Gives up the current activeGame
  */
 user.prototype.giveUp = function() {
