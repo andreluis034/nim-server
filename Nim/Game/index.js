@@ -170,10 +170,8 @@ game.prototype.gameFinished = function(){
         } else {
             ranking.addGame(this.players[i].user.nick, this.size)
         }
-        this.players[i].user.setActiveGame(null)
-        this.players[i].SSEClient.close()
     }
-    delete activeGames[this.gameID]
+    this.finishCleanup()
 }
 
 /**
@@ -199,6 +197,18 @@ game.prototype.finalState = function() {
     return true
 }
 
+game.prototype.finishCleanup = function () {
+    this.clearTimeout()
+    delete activeGames[this.gameID]
+    if(!this.playing) {
+        delete waitingLobby[this.groupID]
+    }
+    for(var i = 0; i < this.players.length; ++i) {
+        this.players[i].user.setActiveGame(null)
+        this.players[i].SSEClient.close()
+    }
+}
+
 /**
  * Makes the specified user give up
  * @param {user} user 
@@ -208,10 +218,7 @@ game.prototype.giveUp = function(user) {
         this.broadcast(JSON.stringify({
             winner: null
         }))
-        delete activeGames[this.gameID]
-        delete waitingLobby[this.groupID]
-        this.players[0].user.setActiveGame(null)
-        this.players[0].SSEClient.close()
+        this.finishCleanup()
         return;
     }
 
@@ -220,7 +227,6 @@ game.prototype.giveUp = function(user) {
         if(this.players[i].user !== user) {
             winner = this.players[i].user.nick
         }
-        this.players[i].user.setActiveGame(null)
     }
     this.broadcast(JSON.stringify({
         winner: winner
