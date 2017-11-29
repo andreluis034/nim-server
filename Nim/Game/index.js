@@ -20,6 +20,7 @@ function game(size, groupID) {
     this.clientsConnected = 0
     this.size = size
     this.playing = false
+    this.timeout = undefined
     for(var i = 0; i < size; ++i) {
         this.rack.push(i + 1)
     }
@@ -27,6 +28,7 @@ function game(size, groupID) {
 }
 
 game.prototype.addPlayer = function(user) {
+    this.clearTimeout()
     if(this.hasUser(user.nick))
         return;
     if(this.players.length === 2)
@@ -38,23 +40,30 @@ game.prototype.addPlayer = function(user) {
     this.players.push(player)
     if(this.players.length === 2)
         this.ready()
+    else 
+        this.setTimeout()
 }
 
 /**
-* 
+* Checks if a given nick is playing
 * @param {String} nick 
 * @returns {Boolean}
 */
 game.prototype.hasUser = function(nick) {
-    for(var i = 0; i < this.players.length; ++i) 
-    if(nick === this.players[i].user.nick)
-    return true
+    for(var i = 0; i < this.players.length; ++i) {
+        if(nick === this.players[i].user.nick){
+            return true
+        }
+    }
     return false
+    
 }
 
+/**
+ * Marks the lobby as ready, no other players can join
+ */
 game.prototype.ready = function() {
     delete waitingLobby[this.groupID]
-    
 }
 
 /**
@@ -76,7 +85,7 @@ game.prototype.bindClient = function(nick, sseclient){
 }
 
 /**
-* 
+* Sends the specified message to all users
 * @param {String} msg 
 */
 game.prototype.broadcast = function(msg) {
@@ -86,11 +95,13 @@ game.prototype.broadcast = function(msg) {
 }
 
 game.prototype.start = function() {
+    this.clearTimeout()
     this.playing = true
     this.broadcast(JSON.stringify({
         turn: this.currentTurn.user.nick,
         rack: this.rack
     }))
+    this.setTimeout()
 }
 
 /**
@@ -112,11 +123,24 @@ game.prototype.validPlay = function(play) {
     return true
 }
 
+game.prototype.clearTimeout = function() {
+    if(this.timeout !== undefined) {
+        clearTimeout(this.timeout)
+        this.timeout = undefined
+    }
+}
+
+game.prototype.setTimeout = function() {
+    this.timeout = setTimeout(() => {
+        self.currentTurn.user.giveUp()
+    }, 2 * 60)
+}
+
 /**
-* 
 * @param {*} play 
 */
 game.prototype.makePlay = function(play) {
+    this.clearTimeout()
     this.rack[play.stack] = play.pieces
     if(this.finalState()){
         this.broadcast(JSON.stringify({
@@ -135,8 +159,8 @@ game.prototype.makePlay = function(play) {
         stack: play.stack,
         pieces: play.pieces
     }))
+    this.setTimeout()
 }
-
 
 game.prototype.gameFinished = function(){
     for(var i = 0; i < this.players.length; ++i) {
@@ -159,6 +183,7 @@ game.prototype.switchTurn = function() {
         this.currentTurn = this.players[1]
     else
         this.currentTurn = this.players[0]
+    var self = this;
 }
 
 /**
@@ -174,7 +199,7 @@ game.prototype.finalState = function() {
 }
 
 /**
- * 
+ * Makes the specified user give up
  * @param {user} user 
  */
 game.prototype.giveUp = function(user) {
