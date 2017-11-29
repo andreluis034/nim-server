@@ -131,9 +131,10 @@ game.prototype.clearTimeout = function() {
 }
 
 game.prototype.setTimeout = function() {
+    var self = this
     this.timeout = setTimeout(() => {
         self.currentTurn.user.giveUp()
-    }, 2 * 60)
+    }, 2 * 60 * 1000)
 }
 
 /**
@@ -208,6 +209,9 @@ game.prototype.giveUp = function(user) {
             winner: null
         }))
         delete activeGames[this.gameID]
+        delete waitingLobby[this.groupID]
+        this.players[0].user.setActiveGame(null)
+        this.players[0].SSEClient.close()
         return;
     }
 
@@ -215,8 +219,8 @@ game.prototype.giveUp = function(user) {
     for(var i = 0; i < this.players.length; ++i) {
         if(this.players[i].user !== user) {
             winner = this.players[i].user.nick
-            break;
         }
+        this.players[i].user.setActiveGame(null)
     }
     this.broadcast(JSON.stringify({
         winner: winner

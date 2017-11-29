@@ -39,9 +39,8 @@ addRoute('POST', new Route('/join', middleware.parseJSON,
 addRoute('POST', new Route('/notify', middleware.parseJSON, 
     middleware.hasUser, middleware.validateUser, notify.hasValidInfo, 
     notify.getGame, notify.isValidPlay, notify.final))
-addRoute('POST', new Route('/join', middleware.parseJSON, 
-    middleware.hasUser, middleware.validateUser,
-    leave.hasValidInfo, leave.final))
+addRoute('POST', new Route('/leave', middleware.parseJSON, 
+    middleware.hasUser, middleware.validateUser, leave.final))
 addRoute('GET', new Route('/update', update.hasValidInfo, update.final))
 
 /**

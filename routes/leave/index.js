@@ -19,7 +19,7 @@ module.exports = {
 
     final: (req, res) => {
         var game = req.user.getActiveGame()
-        if(req.user.getActiveGame() !== null) {
+        if(req.user.getActiveGame() === null) {
             res.writeHead(400)
             res.end(JSON.stringify({error: "You're not in a game"}))
             return
