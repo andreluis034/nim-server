@@ -32,6 +32,7 @@ module.exports = {
         if(us === undefined) {
             us = user.createUser(req.body.nick, req.body.pass)
         } else if(!us.passwordMatches(req.body.pass)) {
+            res.writeHead(401)
             res.end(JSON.stringify({error: "User registered with a different password"}))
             return
         }
