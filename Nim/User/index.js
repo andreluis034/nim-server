@@ -25,8 +25,11 @@ var usernames = {
  * @param {String} password 
  */
 function user(nick, password){
+    const hash = crypto.createHash('sha256');
+    
     this.nick = nick
-    this.password = password
+    this.salt = randomString(saltLength);
+    this.password = hash.update(password+this.salt).digest('hex');
     this.victories = 0
     this.games = 0
     this.activeGame = null
@@ -38,7 +41,9 @@ function user(nick, password){
  * @returns {Boolean} - True if the given password is correct
  */
 user.prototype.passwordMatches = function(password) {
-    return this.password === password
+    const hash = crypto.createHash('sha256');
+    
+    return this.password === hash.update(password+this.salt).digest('hex')
 }
 
 /**
