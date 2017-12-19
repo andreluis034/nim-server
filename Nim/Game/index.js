@@ -1,7 +1,6 @@
 const ranking = require('../Ranking')
 var crypto = require('crypto');
 
-var gameId = 0;
 var waitingLobby = {
     
 }

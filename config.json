@@ -1,3 +1,7 @@
 {
-    "port": 8008
+    "port": 8008,
+    "storage": {
+        "user": "users.json",
+        "ranking": "ranking.json"
+    }
 }
