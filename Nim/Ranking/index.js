@@ -1,3 +1,6 @@
+const config = require('../../config.json')
+const fs = require('fs');
+
 var ranking = {
 }
 
@@ -22,7 +25,6 @@ function addUser(nick, list)  {
  * @returns {Number} The index of the nick
  */
 function findUser(nick, list) {
-    list.push
     for(var i = 0; i < list.length; ++i) {
         if(list[i].nick === nick)
             return i
@@ -51,6 +53,40 @@ function sortList(list) {
     })
 }
 
+/**
+* Loads the usernames from the config file
+*/
+function restoreRanking(){
+    console.log("INFO: Loading ranking from: " + config.storage.ranking)
+    fs.readFile(config.storage.ranking, (err, data) => {
+        if(err){
+            console.log("WARNING: Failed to load ranking file\n" + err.message);
+            return;
+        }
+        else{
+            try {
+                ranking = JSON.parse(data);
+            } catch (error) {
+                console.log("WARNING: Failed to parse saved ranking, ignoring file\n"+ error.message)
+                return;
+            }
+        }
+        console.log("INFO: Loaded ranking from: " + config.storage.ranking)
+    })
+}
+
+function saveRanking()
+{
+    console.log("INFO: Saving ranking to: " + config.storage.ranking)
+    fs.writeFile(config.storage.ranking, JSON.stringify(ranking), (err) => {
+        if(err) {
+            console.log("WARNING: Failed to save ranking\n"+err.message)
+            return;
+        }
+        console.log("INFO: Saved ranking to: " + config.storage.ranking)
+    })    
+}
+
 module.exports = {
     /**
      * @param {Number} size
@@ -73,6 +109,7 @@ module.exports = {
         lb[index].victories++
         lb[index].games++
         sortList(lb)
+        saveRanking()
     },
     /**
      * Adds a game to the given user on the specified size
@@ -83,5 +120,7 @@ module.exports = {
         var lb = getSize(size)
         var index = findUser(nick, ranking[size])
         lb[index].games++
+        saveRanking()
     }
 }
+restoreRanking()

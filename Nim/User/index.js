@@ -36,8 +36,6 @@ function user(nick, password){
     this.nick = nick
     this.salt = randomString(saltLength);
     this.password = hash.update(password+this.salt).digest('hex');
-    this.victories = 0
-    this.games = 0
     this.activeGameId = ""
 }
 
