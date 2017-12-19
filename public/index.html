@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<title>NIM</title>
+	<meta charset="utf-8">
+	<!-- Android Chrome theme color -->
+	<meta name="theme-color" content="#3889EA" />
+	<link rel="stylesheet" type="text/css" href="css/nim.css">
+	<script src="js/NimApi.js"></script>
+	<script src="js/leaderboard.js"></script>
+	<script src="js/game.js"></script>
+	<script src="js/navigator.js"></script>
+	<script src="js/timer.js"></script>
+	
+</head>
+
+<body>
+	<div id="pages">
+		<div id="homepage">
+			<div class="container welcome-message">
+				<h1>nim</h1>
+				<h2>A mathematical game of strategy</h2>
+			</div>
+			<div class="container log-in">
+				<h2 id="error"></h2>	
+				<div id='configuration'>
+					<div class='user'>
+						<span class="profile">
+							<img src="img/avatar.png" alt="avatar">
+							<span id="username-display">Fayaru</span>
+						</span>
+						<a id="logoutbutton" class="fa-logout logout fa-icon" href="#/logout">
+						</a>
+					</div>
+					<form action="#" method="post" id="startGame">
+						<input class="text" required id="boardsize" type="number" name="quantity" min="3" max="50" placeholder="Board size">
+						<select class="text" id="adversary">
+							<option class="placeholder" value="" selected disabled>Adversary</option>
+							<option value="Computer">Computer</option>
+							<option value="Human">Human</option>
+						</select>
+						<select class="text" id="playOrder">
+							<option class="placeholder" value="" selected disabled>Play order</option>
+							<option value="enemyFirst">Adversary plays first</option>
+							<option value="meFirst">I play first</option>
+						</select>
+						<select class="text" id="gamedifficulty">
+							<option class="placeholder" value="" selected disabled>Game Difficulty</option>
+							<option value="easy">Easy</option>
+							<option value="normal">Normal</option>
+							<option value="heroic">Heroic</option>
+							<option value="legendary">Legendary</option>
+						</select>
+						<input class="text" required id="groupnumber" type="number" min="0" name="group" placeholder="Group Number">
+						<div class="form-buttons">
+							<input class="button fullwidth" type="submit" value="Play">
+						</div>
+					</form>
+				</div>
+				
+				<div id='login-form'>
+					<form action="#" method="post" id="loginForm">
+						<div>
+							<input id="username_box" class="text" type="text" name="username" placeholder="Username">
+						</div>
+						<div>
+							<input id="password_box" class="text" type="password" name="psw" placeholder="Password">
+						</div>
+						
+						<div class="form-buttons">
+							<input class="button login" type="submit" value="Login" id="loginButton"> 
+							<input class="button register" type="submit" value="Register" id="registerButton">
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+		
+		<div id="big-header">
+			<div class="big-header">
+				<div class="container">
+					<a href="#/" class="name vertical-center">nim</a>
+					<div class="return vertical-center" id="returnToGame">
+						<div>
+							Return to game
+						</div>
+						<div class="your-turn" id="your-turn">
+							It's your turn
+						</div>
+						
+					</div>
+				</div>
+			</div>
+			<div id="leaderboard" class="container">
+				<h2 class="general">Leaderboard</h2>
+				<div class="mode active" id="offline-lb">offline</div>
+				<div class="mode" id="online-lb">online</div>
+				<input type="number" id="rankingSize" placeholder="Board size" min="3" max="50">
+				<table class="leaderboard">
+					<thead>
+						<tr>
+							<th class="user">User</th>
+							<th class="victories">Points</th>
+						</tr>
+					</thead>
+					<tbody id="big-leaderboard">
+					</tbody>
+				</table>
+			</div>
+			<div id="about" class="container">
+				<h2 class="general">About the game</h2>
+				<p class="general">
+					Nim is a mathematical game of strategy in which two players take turns removing objects from distinct heaps.
+				</p>
+				<p class="general">
+					A player can only remove an arbitrary amount of pieces from one single heap. The player that removes the last piece wins the game.
+				</p>
+				<hr class="general">
+				<h2 class="general">Configuring the game</h2>
+				<p class="general">
+					After logging in, you will be presented with the main configuration screen, as shown below. 
+				</p>
+				<img src="img/mainscreen.PNG" id="main_screen_img" alt = "Main screen">
+				<p class="general">
+					In order to play, you have to first decide how many columns you want to play the game with (Board Size option). For playability reasons, this number is limited to 50.
+				</p>
+				<p class="general">
+					Then, please choose the type of adversary you want to be matched with. This can be either the AI or another Human (Multiplayer mode is WIP).
+				</p>
+				<p class="general">
+					Finally, decide what player plays first and how smart you want the AI to be.
+				</p>
+				<img src="img/difficulty.PNG" id="difficulty_img" alt="Difficulties">
+				<p class="general">
+					If you're feeling lucky, try the legendary mode... I bet you won't be able to beat the AI in that difficulty!
+				</p>
+				<hr class="general">
+				<h2 class="general">Playing the game</h2>
+				<p class="general">
+					If "Your Turn" is displayed above the game board, you can make your play by selecting any amount of pieces you wish to remove from a single column.
+				</p>
+				<img src="img/cursor.PNG" id="cursor_img" alt="Play transition">
+				<p class="general">
+					As shown in the image above, if you try to select one piece of a column from the board, all the others above it will also be highlighted. Click on the left mouse button, and the pieces will be removed. The player which removes the last piece will be victorious
+				</p>
+				<p class="general">
+					If you are clicking on the game pieces and nothing is happening, please check the turn message above the board, as it probably is your opponent's turn to play.
+				</p>
+				<p class="general">
+					There is also the "Verbose Mode" button. When you click on it, a scrollable chat-style text-box will appear, indicating every play that was done since the start of the game.
+				</p>
+				<img src="img/verbose.PNG" id="verbose_img" alt="Verbose mode">
+				<p class="general">
+					As you already noticed the user can also decide at any moment of the game if he wants to give up.
+				</p>
+				<img src="img/giveup.PNG" id="giveup_img" alt="Give up">
+				<p class="general">
+					If the user gives up, his total score for that match will be 0.
+				</p>
+				<hr class="general">
+				<h2 class="general">Score Calculation</h2>
+				<p class="general">
+					The total score for each match played is as follows.
+				</p>
+				<img src="img/won_score.PNG" id="won_score_img" alt="Victory screen">
+				<h3 class="general">Total points = Difficulty Multiplier * Plays Multiplier * Columns Multiplier * Outcome Multiplier</h3>
+				<h3 class="general">Difficulty Multiplier</h3>
+				<div class="general">
+					<b>0.1*(Difficulty ranging from 1-100).</b>
+					<ul>
+						<li>
+							Easy: 25
+						</li>
+						<li>
+							Normal: 50
+						</li>
+						<li>
+							Heroic: 75
+						</li>
+						<li>
+							Legendary: 100
+						</li>
+					</ul>
+				</div>
+				<h3 class="general">Plays Multiplier</h3>
+				<p class="general">
+					<b>1 + NumberOfColumns/NumberOfPlays</b>
+				</p>
+				<p class="general">
+					We can easily derive from the formula above that if the number of plays from the user exceeds the number of columns there are on the game, this factor won't have much of an effect on the final score.
+				</p>
+				<p class="general">
+					This means that the player who wins a game with less plays than another gets more points (if the configuration is exactly the same).
+				</p>
+				<h3 class="general">Columns Multiplier</h3>
+				<p class="general">
+					<b>1 + NumberOfColumns/10</b>
+				</p>
+				<p class="general">
+					Simply put, the more columns you board has, more points you get for playing a match on it.
+				</p>
+				<h3 class="general">Outcome Multiplier</h3>
+				<p class="general">
+					<b>If victorious, is equal to 1</b>
+				</p>
+				<p class="general">
+					<b>If defeated, is equal to 0.1</b>
+				</p>
+				<p class="general">
+					This means that the total score of a match where you get defeated grants you 10 times less the points if you were to win that same exact match.
+				</p>
+				<h3 class="general">About giving up</h3>
+				<p class="general">
+					Giving up doesn't give you any points at all. This will be represented by the "N/A" word in each multiplier when the total score prompt appears.
+				</p>
+				<img src="img/giveup_score.PNG" id="giveup_score_img" alt="No points when you give up">
+			</div>
+			<div id="game-content" class="container">
+				<div class="container" id="game">
+
+				</div>
+			</div>
+			
+		</div>
+	</div>
+	<div class="footer" id="footer">
+		<div class="container center">
+			<a href="#/" class="footer-name">nim</a>
+			<ul class="menu">
+				<li>
+					<a href="#/leaderboard">Leaderboard</a>
+				</li>
+				<li>
+					<a href="#/about">About</a>
+				</li>
+			</ul>
+		</div>
+	</div>
+</body>
+
+</html>
