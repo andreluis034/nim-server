@@ -1,8 +1,26 @@
+var crypto = require('crypto');
+const saltLength = 32;
+/**
+ * Returns a random alpha numeric string with the specified length
+ * @param {Number} length 
+ * @returns {String}
+ */
+function randomString(length) 
+{
+    var text = "";
+    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  
+    for (var i = 0; i < length; i++)
+      text += possible.charAt(Math.floor(Math.random() * possible.length));
+  
+    return text;
+}
+//Stores the usernames
 var usernames = {
 
 }
 /**
- * 
+ * Creates a new instance of user
  * @param {String} nick 
  * @param {String} password 
  */
@@ -15,15 +33,16 @@ function user(nick, password){
 }
 
 /**
- * 
+ * Checks if the given password is valid
  * @param {String} password 
+ * @returns {Boolean} - True if the given password is correct
  */
 user.prototype.passwordMatches = function(password) {
     return this.password === password
 }
 
 /**
- * 
+ * Sets the player's active game
  * @param {Game} game 
  */
 user.prototype.setActiveGame = function(game) {
@@ -31,6 +50,7 @@ user.prototype.setActiveGame = function(game) {
 }
 
 /**
+ * Gets the player's active game, undefined means no game
  * @param {Game} returns the active game
  */
 user.prototype.getActiveGame = function() {
