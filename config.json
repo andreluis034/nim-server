@@ -3,5 +3,9 @@
     "storage": {
         "user": "users.json",
         "ranking": "ranking.json"
+    },
+    "public": {
+        "root": "public/",
+        "default_index": "index.html"
     }
 }

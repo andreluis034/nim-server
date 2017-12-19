@@ -7,7 +7,7 @@ const join = require('./join')
 const notify = require('./notify')
 const update = require('./update')
 const leave = require('./leave')
-
+const serveStatic = require('./static.js')
 var routes = {}
 
 function Route() {
@@ -43,26 +43,37 @@ addRoute('POST', new Route('/leave', middleware.parseJSON,
     middleware.hasUser, middleware.validateUser, leave.final))
 addRoute('GET', new Route('/update', update.hasValidInfo, update.final))
 
+
 /**
  * Handles the incoming request
  * @param {IncomingMessage} request 
  * @param {ServerResponse} response 
  */
 module.exports = function(request, response){
-    response.setHeader("Content-Type", "application/json")
+
     response.setHeader("Access-Control-Allow-Origin", "*");
     response.setHeader("Cache-Control", "no-cache");
-
     request.url = URL.parse(request.url, true)
     if(routes[request.method] === undefined) {
+
+        response.setHeader("Content-Type", "application/json")
+        res.writeHead(501)
         response.end(JSON.stringify({error: `unknown ${request.method} request`}))
         return
     }
     var path = routes[request.method][request.url.pathname]
     if(path === undefined) {
+        if(request.method === "GET") {
+            serveStatic(request, response);
+            return;
+        }
+        res.writeHead(501)
+        response.setHeader("Content-Type", "application/json")
         response.end(JSON.stringify({error: `unknown ${request.method} request`}))
         return
     }
+
+    response.setHeader("Content-Type", "application/json")
     var callbacks = path.callbacks.slice()
     function next() {
         callback = callbacks.pop();
