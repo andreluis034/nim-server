@@ -1,4 +1,6 @@
 const ranking = require('../Ranking')
+var crypto = require('crypto');
+
 var gameId = 0;
 var waitingLobby = {
     
@@ -7,18 +9,19 @@ var activeGames = {
     
 }
 /**
-* 
+* Creates an instance of a game
 * @param {Number} size 
 * @param {*} groupID 
 */
 function game(size, groupID) {
+    const hash = crypto.createHash('md5');    
+    this.size = size
     this.groupID = groupID
-    this.gameID = (gameId++).toString(16)
+    this.gameID = hash.update(`${Date.now()}_${this.groupID}_${this.size}`).digest('hex');//(gameId++).toString(16)
     this.players = []
     this.currentTurn = null
     this.rack = []
     this.clientsConnected = 0
-    this.size = size
     this.playing = false
     this.timeout = undefined
     for(var i = 0; i < size; ++i) {
