@@ -109,7 +109,7 @@ module.exports = {
         lb[index].victories++
         lb[index].games++
         sortList(lb)
-        saveRanking()
+        //saveRanking()
     },
     /**
      * Adds a game to the given user on the specified size
@@ -120,7 +120,8 @@ module.exports = {
         var lb = getSize(size)
         var index = findUser(nick, ranking[size])
         lb[index].games++
-        saveRanking()
-    }
+        //saveRanking()
+    },
+    saveRanking: saveRanking
 }
 restoreRanking()

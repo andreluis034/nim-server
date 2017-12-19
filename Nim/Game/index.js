@@ -173,6 +173,7 @@ game.prototype.gameFinished = function(){
             ranking.addGame(this.players[i].user.nick, this.size)
         }
     }
+    ranking.saveRanking();
     this.finishCleanup()
 }
 
