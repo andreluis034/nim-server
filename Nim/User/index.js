@@ -10,12 +10,8 @@ const saltLength = 32;
 */
 function randomString(length) 
 {
-    var text = "";
-    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-    
-    for (var i = 0; i < length; i++)
-    text += possible.charAt(Math.floor(Math.random() * possible.length));
-    
+    const buf = Buffer.alloc(length/2);// 1 byte = 2 Hex Chars
+    var text = crypto.randomFillSync(buf).toString('hex');
     return text;
 }
 
