@@ -77,7 +77,7 @@ user.prototype.getActiveGame = function() {
 * Gives up the current activeGame
 */
 user.prototype.giveUp = function() {
-    this.activeGame.giveUp(this)
+    this.getActiveGame().giveUp(this)
 }
 
 /**
