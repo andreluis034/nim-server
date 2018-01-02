@@ -57,7 +57,7 @@ module.exports = function(request, response){
     if(routes[request.method] === undefined) {
 
         response.setHeader("Content-Type", "application/json")
-        res.writeHead(501)
+        response.writeHead(501)
         response.end(JSON.stringify({error: `unknown ${request.method} request`}))
         return
     }
@@ -67,7 +67,7 @@ module.exports = function(request, response){
             serveStatic(request, response);
             return;
         }
-        res.writeHead(501)
+        response.writeHead(501)
         response.setHeader("Content-Type", "application/json")
         response.end(JSON.stringify({error: `unknown ${request.method} request`}))
         return
