@@ -1,6 +1,7 @@
-const host = location.hostname; //twserver.alunos.dcc.fc.up.pt
-const port = location.port; //8008
-
+const host = location.hostname || "twserver.alunos.dcc.fc.up.pt"
+const port = location.port ||  8001
+console.log(host)
+console.log(port)
 const NimApi =  {
     
 }
