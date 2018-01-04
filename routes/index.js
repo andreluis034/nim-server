@@ -68,8 +68,8 @@ module.exports = function(request, response){
             serveStatic(request, response);
             return;
         }
-        response.writeHead(501)
         response.setHeader("Content-Type", "application/json")
+        response.writeHead(501)
         response.end(JSON.stringify({error: `unknown ${request.method} request`}))
         return
     }
