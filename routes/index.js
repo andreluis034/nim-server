@@ -54,7 +54,7 @@ module.exports = function(request, response){
     response.setHeader("Access-Control-Allow-Origin", "*");
     response.setHeader("Cache-Control", "no-cache");
     request.url = URL.parse(request.url, true)
-    console.log(`INFO: ${request.method} ${request.url.pathname} ${req.connection.remoteAddress}`)
+    console.log(`[${new Date().toISOString()}]INFO: ${request.method} ${request.url.pathname} ${req.connection.remoteAddress}`)
     if(routes[request.method] === undefined) {
 
         response.setHeader("Content-Type", "application/json")
